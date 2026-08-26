@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/02 Domain/">
+    <Project Path="DemoCrudWithEF.Domain/DemoCrudWithEF.Domain.csproj" />
+  </Folder>
+  <Folder Name="/03 App/">
+    <Project Path="DemoCrudWithEF/DemoCrudWithEF.csproj" />
+  </Folder>
+  <Folder Name="/99 Tools/">
+    <Project Path="Tools/Tools.csproj" />
+  </Folder>
+</Solution>
