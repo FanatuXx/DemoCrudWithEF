@@ -9,5 +9,6 @@ namespace DemoCrudWithEF.Domain.Errors
     public static class GroupeErrors
     {
         public static Error GroupeException => Error.Create("Groupe.Exception", "Une exception est survenue."); 
+        public static Error GroupeNotFound => Error.Create("Groupe.NotFound", "Le groupe n'a pas été trouvé."); 
     }
 }

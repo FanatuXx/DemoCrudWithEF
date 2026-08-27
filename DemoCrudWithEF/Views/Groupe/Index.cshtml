@@ -5,11 +5,37 @@
 }
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Nom</th>
-        </tr>
-    </thead>
-</table>
+
+<div class="row">
+    <div class="col-md-10">
+        @if(TempData["ErrorMessage"] is not null)
+        {
+            <div class="alert-danger">
+                <p>@TempData["ErrorMessage"]</p>
+            </div>
+        }
+
+
+        <a asp-action="Create" asp-controller="Groupe">Créer un nouveau groupe</a>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(Groupe groupe in Model)
+                {
+                    <tr>
+                        <td>@groupe.Id</td>
+                        <td>@groupe.Nom</td>
+                        <td><a asp-action="Details" asp-controller="Groupe" asp-route-id="@groupe.Id">Détails</a> | <a asp-action="Edit" asp-controller="Groupe" asp-route-id="@groupe.Id">Editer</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

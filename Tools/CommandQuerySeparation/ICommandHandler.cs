@@ -11,9 +11,21 @@ namespace Tools.CommandQuerySeparation
         Result Handle(TCommand command);
     }
 
+    public interface ICommandAsyncHandler<TCommand>
+        where TCommand : ICommandDefinition
+    {
+        Task<Result> HandleAsync(TCommand command, CancellationToken cancellationToken);
+    }
+
     public interface ICommandHandler<TCommand, TResult>
         where TCommand : ICommandDefinition<TResult>
     {
         Result<TResult> Handle(TCommand command);
+    }
+
+    public interface ICommandAsyncHandler<TCommand, TResult>
+        where TCommand : ICommandDefinition<TResult>
+    {
+        Task<Result<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken);
     }
 }

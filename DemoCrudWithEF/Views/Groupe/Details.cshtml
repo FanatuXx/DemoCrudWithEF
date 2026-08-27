@@ -1,0 +1,52 @@
+﻿@model DetailsGroupForm
+
+@{
+    ViewBag.Title = $"Détails du groupe {Model.Groupe.Nom}";
+}
+
+
+
+<div class="row">
+    <div class="col-md-10">
+        
+        <div>
+            <p>Id : @Model.Groupe.Id</p>
+            <p>Nom : @Model.Groupe.Nom</p>
+
+            <a asp-action="Edit" asp-route-id="@Model.Groupe.Id">Editer</a>
+        </div>
+
+        <hr />
+        <div>
+            <span>Albums : </span>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Titre</th>
+                    <th>Année</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Album album in Model.Groupe.Albums)
+                {
+                    <tr>
+                        <td>@album.Id</td>
+                        <td>@album.Titre</td>
+                        <td>@album.Annee</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <hr />
+
+        <partial name="_AddAlbumPartial" model="@Model.AddAlbumForm" />
+
+        <base href="~/" />
+        <component type="typeof(DemoCrudWithEF.Views.Groupe.AddAlbumComponent)"
+                   render-mode="ServerPrerendered" param-Form="@Model.AddAlbumForm" />
+        
+    </div>
+</div>

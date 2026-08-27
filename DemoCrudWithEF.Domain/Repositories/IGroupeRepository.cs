@@ -1,10 +1,15 @@
 ﻿using DemoCrudWithEF.Domain.Commands;
+using DemoCrudWithEF.Domain.Entities;
+using DemoCrudWithEF.Domain.Queries;
 using Tools.CommandQuerySeparation;
 
 namespace DemoCrudWithEF.Domain.Repositories
 {
     public interface IGroupeRepository :
-        ICommandHandler<AddGroupeCommand>
+        IQueryHandler<GetGroupesQuery, IEnumerable<Groupe>>,
+        IQueryAsyncHandler<GetGroupeByIdQuery, Groupe>,
+        ICommandHandler<AddGroupeCommand>,
+        ICommandHandler<UpdateGroupeCommand>
     {
     }
 }

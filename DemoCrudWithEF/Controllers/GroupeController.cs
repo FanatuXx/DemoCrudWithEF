@@ -1,5 +1,6 @@
 ﻿using DemoCrudWithEF.Domain.Commands;
 using DemoCrudWithEF.Domain.Entities;
+using DemoCrudWithEF.Domain.Queries;
 using DemoCrudWithEF.Domain.Repositories;
 using DemoCrudWithEF.Models;
 using Microsoft.AspNetCore.Http;
@@ -8,24 +9,51 @@ using Tools.Results;
 
 namespace DemoCrudWithEF.Controllers
 {
-    public class GroupeController(IGroupeRepository groupeRepository) : Controller
+    public class GroupeController(IGroupeRepository groupeRepository, IAlbumRepository albumRepository) : Controller
     {
         private readonly IGroupeRepository _groupeRepository = groupeRepository;
+        private readonly IAlbumRepository _albumRepository = albumRepository;
 
         // GET: GroupeController
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            return View(Enumerable.Empty<Groupe>());
+            Result<IEnumerable<Groupe>> result = _groupeRepository.Handle(new GetGroupesQuery());
+
+            if (result.IsFailure)
+            {
+                ViewBag.ErrorMessage = result.Error.ToString();
+                return View(Enumerable.Empty<Groupe>());
+            }
+
+            return View(result.Data);
         }
 
-        // GET: GroupeController/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            Result<Groupe> result = await _groupeRepository.HandleAsync(new GetGroupeByIdQuery(id, true));
+
+            if (result.IsFailure)
+            {
+                TempData["ErrorMessage"] = result.Error.ToString();
+                return RedirectToAction("Index");
+            }
+
+            return View(new DetailsGroupForm() { Groupe = result.Data, AddAlbumForm = new AddAlbumForm() { GroupeId = result.Data.Id } });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAlbum(AddAlbumForm form)
+        {
+            if(ModelState.IsValid)
+            {
+                await _albumRepository.HandleAsync(new CreateAlbumCommand(form.Titre, form.Annee, form.GroupeId), CancellationToken.None);
+            }
+
+            return RedirectToAction("Details", new { id = form.GroupeId });
         }
 
         // GET: GroupeController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -33,7 +61,7 @@ namespace DemoCrudWithEF.Controllers
         // POST: GroupeController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateGroupeForm form)
+        public IActionResult Create(CreateGroupeForm form)
         {
             if(!ModelState.IsValid)
             {
@@ -52,50 +80,34 @@ namespace DemoCrudWithEF.Controllers
         }
 
         // GET: GroupeController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            Result<Groupe> result = await _groupeRepository.HandleAsync(new GetGroupeByIdQuery(id));
+
+            if (result.IsFailure)
+            {
+                TempData["ErrorMessage"] = result.Error.ToString();
+                return RedirectToAction("Index");
+            }
+
+            EditGroupeForm form = new EditGroupeForm() { Nom = result.Data.Nom };
+
+            return View(form);
         }
 
         // POST: GroupeController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(int id, EditGroupeForm form)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            Result result = _groupeRepository.Handle(new UpdateGroupeCommand(id, form.Nom));
 
-        // GET: GroupeController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: GroupeController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            if(result.IsFailure)
             {
-                return RedirectToAction(nameof(Index));
+                TempData["ErrorMessage"] = result.Error.ToString();
             }
-            catch
-            {
-                return View();
-            }
-        }
-    }
-
-    public class X
-    {
-        public string? Nom { get; set; }
+            
+            return RedirectToAction("Index");
+        }        
     }
 }

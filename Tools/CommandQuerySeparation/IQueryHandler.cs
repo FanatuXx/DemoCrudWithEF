@@ -10,4 +10,10 @@ namespace Tools.CommandQuerySeparation
     {
         Result<TResult> Handle(TQuery query);
     }
+
+    public interface IQueryAsyncHandler<TQuery, TResult>
+        where TQuery : IQueryDefinition<TResult>
+    {
+        Task<Result<TResult>> HandleAsync(TQuery query);
+    }
 }

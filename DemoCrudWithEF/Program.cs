@@ -7,12 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddServerSideBlazor();
 builder.Services.AddDbContext<MusicDbContext>(o =>
 {
     o.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MusicDb;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
 });
 
 builder.Services.AddScoped<IGroupeRepository, GroupeService>();
+builder.Services.AddScoped<IAlbumRepository, AlbumService>();
 
 var app = builder.Build();
 
@@ -36,5 +38,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+app.MapBlazorHub();
 
 app.Run();
