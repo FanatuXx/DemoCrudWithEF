@@ -42,11 +42,8 @@
 
         <hr />
 
-        <partial name="_AddAlbumPartial" model="@Model.AddAlbumForm" />
-
-        <base href="~/" />
         <component type="typeof(DemoCrudWithEF.Views.Groupe.AddAlbumComponent)"
-                   render-mode="ServerPrerendered" param-Form="@Model.AddAlbumForm" />
+                   render-mode="Server" param-Form="@Model.AddAlbumForm" />
         
     </div>
 </div>

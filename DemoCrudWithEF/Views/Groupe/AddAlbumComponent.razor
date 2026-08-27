@@ -1,16 +1,16 @@
 ﻿@using DemoCrudWithEF.Domain.Commands
 @using DemoCrudWithEF.Domain.Repositories
 @using DemoCrudWithEF.Models
-@using Microsoft.AspNetCore.Components.Forms
+
 
 @inject IAlbumRepository _albumRepository
 
 <div class="row">
     <div class="col-md-4">
         <h3>Add Album : </h3>
-        <EditForm EditContext="EditContext">
+        <EditForm EditContext="EditContext" OnValidSubmit="Submit">
             <DataAnnotationsValidator></DataAnnotationsValidator>
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <ValidationSummary Model="Form"></ValidationSummary>
             <div class="form-group">
                 <label class="control-label">Code :</label>
                 <InputText @bind-Value="Form.Titre" class="form-control" />
@@ -22,13 +22,12 @@
                 <ValidationMessage For="() => Form.Annee" class="text-danger" />
             </div>
             <div class="form-group">
-                <button @onclick="Submit" class="btn btn-primary">Ajouter</button>
+                <input type="submit" value="Ajouter Submit" class="btn btn-primary" />
+                <button type="button" @onclick="Submit" class="btn btn-secondary">Ajouter</button>
             </div>
         </EditForm>
     </div>
 </div>
-
-<persist-component-state />
 
 @code {
     [Parameter]
@@ -43,7 +42,7 @@
 
     private async Task Submit()
     {
-        if(EditContext.Validate())
+        if (EditContext.Validate())
         {
             await _albumRepository.HandleAsync(new CreateAlbumCommand(Form.Titre, Form.Annee, Form.GroupeId), CancellationToken.None);
         }

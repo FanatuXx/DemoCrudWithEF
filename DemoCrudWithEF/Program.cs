@@ -1,13 +1,16 @@
 using DemoCrudWithEF.Domain;
 using DemoCrudWithEF.Domain.Repositories;
 using DemoCrudWithEF.Domain.Services;
+using DemoCrudWithEF.Views.Groupe;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
+
 builder.Services.AddDbContext<MusicDbContext>(o =>
 {
     o.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=MusicDb;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
