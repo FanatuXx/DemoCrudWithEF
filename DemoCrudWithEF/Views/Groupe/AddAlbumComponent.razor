@@ -2,8 +2,8 @@
 @using DemoCrudWithEF.Domain.Repositories
 @using DemoCrudWithEF.Models
 
-
 @inject IAlbumRepository _albumRepository
+@inject NavigationManager navigation
 
 <div class="row">
     <div class="col-md-4">
@@ -22,8 +22,7 @@
                 <ValidationMessage For="() => Form.Annee" class="text-danger" />
             </div>
             <div class="form-group">
-                <input type="submit" value="Ajouter Submit" class="btn btn-primary" />
-                <button type="button" @onclick="Submit" class="btn btn-secondary">Ajouter</button>
+                <input type="submit" value="Ajouter" class="btn btn-primary" />
             </div>
         </EditForm>
     </div>
@@ -45,6 +44,7 @@
         if (EditContext.Validate())
         {
             await _albumRepository.HandleAsync(new CreateAlbumCommand(Form.Titre, Form.Annee, Form.GroupeId), CancellationToken.None);
+            navigation.NavigateTo($"groupe/details/{Form.GroupeId}", true);
         }
     }
 }

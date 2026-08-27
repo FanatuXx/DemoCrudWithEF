@@ -1,7 +1,6 @@
 using DemoCrudWithEF.Domain;
 using DemoCrudWithEF.Domain.Repositories;
 using DemoCrudWithEF.Domain.Services;
-using DemoCrudWithEF.Views.Groupe;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
